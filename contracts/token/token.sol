@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.6;
-
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 
-struct Vote 
+struct VotingElement 
 {
     address voteAuthor;
     uint256 votingNumber;
@@ -18,7 +17,7 @@ contract token is ERC20, Ownable, ReentrancyGuard {
     uint256 public timeToVote;
     uint256 public price;
     uint256 public prevVotingNumber;
-    Vote public currentVoting;
+    VotingElement public currentVoting;
 
     mapping(address => mapping(uint256 => bool)) private _isVoterVoted;
 
@@ -43,13 +42,12 @@ contract token is ERC20, Ownable, ReentrancyGuard {
         require(startVotingTimestamp == 0, "voting already started");
         ++prevVotingNumber;
         startVotingTimestamp = block.timestamp;
-        currentVoting = Vote(msg.sender, prevVotingNumber, 0, 0, _price);
+        currentVoting = VotingElement(msg.sender, prevVotingNumber, 0, 0, _price);
     }
 
     function votePriceChange(bool _agreement) external whaleChecking(){
         require(startVotingTimestamp != 0, "!voting");
-        require(currentVoting.voteAuthor
- != msg.sender, "owner");
+        require(currentVoting.voteAuthor != msg.sender, "owner");
         require(!_isVoterVoted[msg.sender][currentVoting.votingNumber], "User already voted!");
 
         uint256 endVotingTimestamp = startVotingTimestamp + timeToVote;
@@ -62,11 +60,9 @@ contract token is ERC20, Ownable, ReentrancyGuard {
 
     function changePriceAndClearVoting() external {
         require(startVotingTimestamp + timeToVote < block.timestamp, "!end");
-
         if(currentVoting.votedAgree > currentVoting.votedDesagree){
             price = currentVoting.newPrice;
         }
-
         _clearVoting();
     }
 
@@ -92,6 +88,5 @@ contract token is ERC20, Ownable, ReentrancyGuard {
     uint256 balancePercent = calculateBalancePercents(balanceOf(msg.sender));
     require(balancePercent >= 5, "balance percent < 5%");
     _;
-
     }
 }

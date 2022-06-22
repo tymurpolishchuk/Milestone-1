@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/tymurpolishchuk/Documents/Work/RedDuck/Blockchain School/contracts/token/token.sol": {
-      "lastModificationDate": 1655878368870,
-      "contentHash": "6ab7b0918be765725ffa3ba2ce323e2b",
+      "lastModificationDate": 1655878907842,
+      "contentHash": "84229739dc593c08ad68819bb4051869",
       "sourceName": "contracts/token/token.sol",
       "solcConfig": {
         "version": "0.8.6",
